@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stylesMain from './../styles/main_styles';
 import stylesGeneral from '../styles/general_styles';
-
 
 const ScreenMain = () => {
   const [notes, setNotes] = useState([]);
@@ -22,15 +14,8 @@ const ScreenMain = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
 
-  const vibrantColors = [
-    '#FF4C8B', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6',
-    '#7C4DFF', '#FF45A1'
-  ];
-
-  const pastelColors = [
-    '#ffd8e3', '#ffedcc', '#ffffe0', '#d0f0c0',
-    '#e0f7fa', '#e8d0ff', '#ffebf4'
-  ];
+  const vibrantColors = [ '#FF4C8B', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF', '#FF45A1' ];
+  const pastelColors = [ '#ffd8e3', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff', '#ffebf4' ];
 
   useEffect(() => {
     const loadNotes = async () => {
@@ -40,7 +25,7 @@ const ScreenMain = () => {
           setNotes(JSON.parse(storedNotes));
         }
       } catch (error) {
-        console.error('Error al cargar las notas', error);
+        console.error('Error while loading notes', error);
       }
     };
 
@@ -51,7 +36,7 @@ const ScreenMain = () => {
     try {
       await AsyncStorage.setItem('notes', JSON.stringify(newNotes));
     } catch (error) {
-      console.error('Error al guardar las notas', error);
+      console.error('Error while saving the notes', error);
     }
   };
 
@@ -61,7 +46,7 @@ const ScreenMain = () => {
         id: Date.now().toString(),
         title: noteTitle,
         text: noteText || '',
-        colorIndex: noteColorIndex, // Guardamos el índice del color
+        colorIndex: noteColorIndex,
         date: noteDate || new Date().toISOString().split('T')[0],
       };
 
@@ -85,19 +70,19 @@ const ScreenMain = () => {
 
   const getMarkedDates = () => {
     const markedDates: Record<string, any> = {};
-  
+
     notes.forEach(note => {
-      const noteDate = note.date.split('T')[0]; // Formato yyyy-mm-dd
+      const noteDate = note.date.split('T')[0];
       if (!markedDates[noteDate]) {
-        markedDates[noteDate] = { dots: [] }; // Crear entrada si no existe
+        markedDates[noteDate] = { dots: [] }; 
       }
-  
+
       markedDates[noteDate].dots.push({
         color: vibrantColors[note.colorIndex],
         selectedDotColor: vibrantColors[note.colorIndex],
       });
     });
-  
+
     if (selectedDate) {
       markedDates[selectedDate] = {
         ...markedDates[selectedDate],
@@ -105,7 +90,7 @@ const ScreenMain = () => {
         selectedColor: '#00d68f',
       };
     }
-  
+
     return markedDates;
   };
 
@@ -138,7 +123,7 @@ const ScreenMain = () => {
               },
             ]}
           >
-            {/* Contenedor en fila */}
+
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
               <Text style={stylesGeneral.noteTitle}>{item.title}</Text>
               <Text style={stylesMain.noteDate}>{item.date}</Text>
@@ -146,7 +131,7 @@ const ScreenMain = () => {
                 <Text style={stylesGeneral.deleteButtonText}>Delete</Text>
               </TouchableOpacity>
             </View>
-            {/* Descripción de la nota */}
+          
             <Text>{item.text}</Text>
           </View>
         )}
@@ -171,11 +156,7 @@ const ScreenMain = () => {
             />
             <Calendar
               onDayPress={(day) => setNoteDate(day.dateString)}
-              markedDates={
-                noteDate
-                  ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } }
-                  : {}
-              }
+              markedDates={ noteDate ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } } : {} }
             />
             <View style={stylesGeneral.colorPalette}>
               {vibrantColors.map((color, index) => (

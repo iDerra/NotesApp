@@ -9,14 +9,14 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function App() {
     return (
-      <Tab.Navigator
-          screenOptions={{
-              swipeEnabled: true,
-              tabBarStyle: { display: 'none' }, // Oculta las pestañas si no quieres mostrarlas
-          }}
-      >
-          <Tab.Screen name="main" component={ScreenMain} />
-          <Tab.Screen name="list" component={ScreenList} />
-      </Tab.Navigator>
+        <Tab.Navigator
+            screenOptions={{
+                swipeEnabled: true,
+                tabBarStyle: { display: 'none' }, // Oculta las pestañas si no quieres mostrarlas
+            }}
+        >
+            <Tab.Screen name="main" component={ScreenMain} />
+            <Tab.Screen name="list" component={ScreenList} />
+        </Tab.Navigator>
     );
 }
