@@ -122,6 +122,9 @@ const ScreenList = () => {
                     style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
                   >
                     <Text style={[stylesGeneral.noteTitle, { color: item.color }]}>{item.title}</Text>
+                    <TouchableOpacity onPress={() => deleteList(item.id)} style={stylesGeneral.deleteButton}>
+                      <Text style={stylesGeneral.deleteButtonText}>Delete</Text>
+                    </TouchableOpacity>
                   </View>
               
                   {/* Descripción de la nota */}
