@@ -16,21 +16,29 @@ const stylesGeneral = StyleSheet.create({
         fontWeight: 'bold',
     },
     addButton: {
-        marginTop: 10,
-        backgroundColor: '#00d68f',
+        position: 'absolute',
+        bottom: 20,
+        alignSelf: 'center',
         padding: 10,
+    }, 
+    addButtonPopUp: {
+        backgroundColor: '#00d68f',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         borderRadius: 8,
+        alignSelf: 'center',
     },
-    addButtonText: {
+    addButtonTextPopUp: {
         color: 'white',
         fontWeight: 'bold',
         textAlign: 'center',
+        fontSize: 16,
     },
     note: {
         padding: 15,
         borderRadius: 8,
         marginBottom: 10,
-      },
+    },
     noteTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -57,21 +65,26 @@ const stylesGeneral = StyleSheet.create({
         height: 30,
         borderRadius: 15,
     },
+
     cancelButton: {
-        color: 'red',
-        marginTop: 10,
-        textAlign: 'center',
-    },
-    deleteButton: {
         marginTop: 10,
         backgroundColor: 'red',
-        padding: 5,
-        borderRadius: 5,
-        alignItems: 'center',
-    },
-    deleteButtonText: {
+        paddingVertical: 10,
+        paddingHorizontal: 27,
+        borderRadius: 8,
+        alignSelf: 'center',
         color: 'white',
-        fontWeight: 'bold',
+        textAlign: 'center',
+        color: 'white',
+        fontSize: 16,
+    },
+    deleteButton: {
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 20,
+        height: 20,
+        backgroundColor: 'transparent',
     },
     input: {
         borderBottomWidth: 1,
@@ -83,6 +96,6 @@ const stylesGeneral = StyleSheet.create({
         marginTop: 20,
     },
 
-  });
+    });
 
 export default stylesGeneral;

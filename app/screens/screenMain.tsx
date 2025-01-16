@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, useColorScheme } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stylesMain from './../styles/main_styles';
 import stylesGeneral from '../styles/general_styles';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 const ScreenMain = () => {
   const [notes, setNotes] = useState([]);
@@ -13,9 +15,10 @@ const ScreenMain = () => {
   const [noteDate, setNoteDate] = useState<string | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
+  const theme = useColorScheme();
 
-  const vibrantColors = [ '#FF4C8B', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF', '#FF45A1' ];
-  const pastelColors = [ '#ffd8e3', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff', '#ffebf4' ];
+  const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
+  const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
 
   useEffect(() => {
     const loadNotes = async () => {
@@ -101,11 +104,7 @@ const ScreenMain = () => {
         markedDates={getMarkedDates()} // Marcar las fechas con puntos
         markingType="multi-dot" // Tipo de marcado para permitir múltiples puntos
       />
-      <View style={stylesGeneral.header}>
-        <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
-          <Text style={stylesGeneral.addButtonText}>+ Note</Text>
-        </TouchableOpacity>
-      </View>
+      
 
       <FlatList
         data={notes}
@@ -128,7 +127,7 @@ const ScreenMain = () => {
               <Text style={stylesGeneral.noteTitle}>{item.title}</Text>
               <Text style={stylesMain.noteDate}>{item.date}</Text>
               <TouchableOpacity onPress={() => deleteNote(item.id)} style={stylesGeneral.deleteButton}>
-                <Text style={stylesGeneral.deleteButtonText}>Delete</Text>
+                <FontAwesome6 name="trash-can" size={20} color="red" />
               </TouchableOpacity>
             </View>
           
@@ -174,8 +173,8 @@ const ScreenMain = () => {
                 />
               ))}
             </View>
-            <TouchableOpacity style={stylesGeneral.addButton} onPress={addNote}>
-              <Text style={stylesGeneral.addButtonText}>Add Note</Text>
+            <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={addNote}>
+              <Text style={stylesGeneral.addButtonTextPopUp}>Add Note</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setIsPopupOpen(false)}>
               <Text style={stylesGeneral.cancelButton}>Cancel</Text>
@@ -183,6 +182,10 @@ const ScreenMain = () => {
           </View>
         </View>
       </Modal>
+
+      <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
+        <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : 'gray'} />
+      </TouchableOpacity>
     </View>
   );
 };
