@@ -1,24 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, TextInput, FlatList, Modal } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, FlatList, Modal } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
-import stylesList from './../styles/list_styles'
-import stylesGeneral from './../styles/general_styles'
+import stylesList from './../styles/list_styles';
+import stylesGeneral from './../styles/general_styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../App';
 
+type ScreenListProps = NativeStackScreenProps<RootStackParamList, 'list'>;
 
-const ScreenList = () => {
+const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
   const [lists, setLists] = useState([]);
   const [listTitle, setListTitle] = useState('');
   const [listColorIndex, setListColorIndex] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newListItem, setNewListItem] = useState('');
-  const [expandedListId, setExpandedListId] = useState(null);
+  const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const { theme } = useTheme();
+  
 
-  const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
-  const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
+  const vibrantColors = ['#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF'];
+  const pastelColors = ['#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff'];
 
   useEffect(() => {
     const loadLists = async () => {
@@ -26,14 +29,14 @@ const ScreenList = () => {
         const storedLists = await AsyncStorage.getItem('lists');
         if (storedLists) {
           setLists(JSON.parse(storedLists));
-      }
+        }
       } catch (error) {
         console.error('Error while loading notes', error);
       }
     };
     loadLists();
   }, []);
-    
+
   const saveLists = async (newLists) => {
     try {
       await AsyncStorage.setItem('lists', JSON.stringify(newLists));
@@ -48,7 +51,7 @@ const ScreenList = () => {
         id: Date.now().toString(),
         title: listTitle,
         colorIndex: listColorIndex,
-        items: []
+        items: [],
       };
 
       const updatedLists = [...lists, newList];
@@ -61,106 +64,84 @@ const ScreenList = () => {
     }
   };
 
-  const deleteList = (id: string) => {
-    const updatedLists = lists.filter(list => list.id !== id);
+  const deleteList = (id) => {
+    const updatedLists = lists.filter((list) => list.id !== id);
     setLists(updatedLists);
     saveLists(updatedLists);
   };
 
-  const addItemToList = (listId) => {
-    if (newListItem.trim()) {
-    const updatedLists = lists.map(list => {
-      if (list.id === listId) {
-        list.items.push(newListItem);
-      }
-      return list;
-    });
-    setLists(updatedLists);
-    saveLists(updatedLists)
-    setNewListItem('');
-    }
-  };
-
-  const toggleExpandList = (listId) => {
-    setExpandedListId(expandedListId === listId ? null : listId);
+  const navigateToListDetails = (list) => {
+    setSelectedListId(list.id);
+    navigation.navigate('ListDetails', { list });
   };
 
   return (
-    <View style={[
-      stylesGeneral.container,
-      { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
-    ]}>
-      <Text style={[stylesGeneral.title, {color: theme === 'dark' ? '#f5f5f5' : '#000000'}]}>LIST NOTES</Text>
-      <FlatList
-        data={lists}
-        keyExtractor={(item) => item.id}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            onPress={() => toggleExpandList(item.id)}
-            style={{ flex: 1 }}
-            onStartShouldSetResponder={(e) => true}
-          >
-            <View
-              style={[
-                stylesGeneral.note,
-                {
-                  backgroundColor: pastelColors[item.colorIndex],
-                  borderTopWidth: 4,
-                  borderLeftWidth: 4,
-                  borderTopColor: vibrantColors[item.colorIndex],
-                  borderLeftColor: vibrantColors[item.colorIndex],
-                },
-              ]}
-            >
+    <View style={[stylesGeneral.container, { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }]}>
+      <Text style={[stylesGeneral.title, { color: theme === 'dark' ? '#f5f5f5' : '#000000' }]}>LIST NOTES</Text>
+        <FlatList
+          data={lists}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => navigateToListDetails(item)} style={{ flex: 1 }}>
               <View
-                style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}
+                style={[
+                  stylesGeneral.note,
+                  {
+                    backgroundColor: pastelColors[item.colorIndex],
+                    borderTopWidth: 4,
+                    borderLeftWidth: 4,
+                    borderTopColor: vibrantColors[item.colorIndex],
+                    borderLeftColor: vibrantColors[item.colorIndex],
+                  },
+                ]}
               >
-                <Text style={[stylesGeneral.noteTitle, { color: item.color }]}>{item.title}</Text>
-                <TouchableOpacity onPress={() => deleteList(item.id)} style={stylesGeneral.deleteButton}>
-                  <FontAwesome6 name="trash-can" size={20} color="red" />
-                </TouchableOpacity>
-              </View>
-            
-              {expandedListId === item.id && (
-                <View>
-                  <View style={stylesList.containerRow}>
-                  <TouchableWithoutFeedback onPress={() => {}}>
-                    <View>
-                      <TextInput
-                        style={stylesList.inputText}
-                        placeholder="New item"
-                        value={newListItem}
-                        onChangeText={setNewListItem}
-                      />
+                {item.id === selectedListId && (
+                  <View
+                    style={[
+                      stylesGeneral.overlay,
+                      {
+                        backgroundColor: 'rgba(0, 0, 0, 0.10)',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                      },
+                    ]}
+                  />
+                )}
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Text style={[stylesGeneral.noteTitle, { color: item.color }]}>{item.title}</Text>
+                  <TouchableOpacity onPress={() => deleteList(item.id)} style={stylesGeneral.deleteButton}>
+                    <FontAwesome6 name="trash-can" size={20} color="red" />
+                  </TouchableOpacity>
+                </View>
+
+                {/* Renderizar los primeros 3 elementos de la lista y tres puntos ("...") si hay más */}
+                <FlatList
+                  data={item.items.slice(0, 2)} // Limitar a 3 elementos
+                  keyExtractor={(subItem, index) => index.toString()}
+                  renderItem={({ item: subItem }) => (
+                    <View style={stylesList.listItemContainer}>
+                      <View style={stylesList.listItemBullet} />
+                      <Text style={stylesList.listItemText}>{subItem}</Text>
                     </View>
-                  </TouchableWithoutFeedback>
-                    <TouchableOpacity
-                      style={stylesList.addButtonList}
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        addItemToList(item.id);
-                      }}
-                    >
-                      <Text style={stylesList.addButtonTextList}>Add item</Text>
-                    </TouchableOpacity>
-                  </View>
-                  <FlatList
-                    data={item.items}
-                    renderItem={({ item }) => (
+                  )}
+                  ListFooterComponent={() => (
+                    item.items.length > 2 ? (
                       <View style={stylesList.listItemContainer}>
                         <View style={stylesList.listItemBullet} />
-                        <Text style={stylesList.listItemText}>{item}</Text>
-                      </View>
-                    )}
-                    keyExtractor={(index) => index.toString()}
-                  />
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>      
-        )}
-        style={stylesGeneral.noteList}
-      />
+                        <Text style={stylesList.listItemText}>...</Text>
+                    </View>
+                    ) : null
+                  )}
+                />
+              </View>
+            </TouchableOpacity>
+          )}
+          style={stylesGeneral.noteList}
+        />
 
       <Modal visible={isModalVisible} transparent={true} animationType="fade">
         <View style={stylesGeneral.modalOverlay}>
@@ -200,7 +181,6 @@ const ScreenList = () => {
       <TouchableOpacity onPress={() => setIsModalVisible(true)} style={stylesGeneral.addButton}>
         <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : 'gray'} />
       </TouchableOpacity>
-
     </View>
   );
 };

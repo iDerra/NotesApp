@@ -7,10 +7,19 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import ScreenMain from './screens/screenMain';
 import ScreenList from './screens/screenList';
+import ListDetails from './screens/listDetails';
 import ThemeSettings from './screens/themeSettings';
 
-const Tab = createMaterialTopTabNavigator();
-const Drawer = createDrawerNavigator();
+export type RootStackParamList = {
+    Home: undefined;
+    Theme: undefined;
+    main: undefined;
+    list: undefined;
+    ListDetails: { list: { id: string; title: string; colorIndex: number; items: string[] } };
+};
+
+const Tab = createMaterialTopTabNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<RootStackParamList>();
 
 function Tabs() {
     return (
@@ -22,6 +31,8 @@ function Tabs() {
         >
             <Tab.Screen name="main" component={ScreenMain} />
             <Tab.Screen name="list" component={ScreenList} />
+            <Tab.Screen name="ListDetails" component={ListDetails}/>
+
         </Tab.Navigator>
     );
 }
