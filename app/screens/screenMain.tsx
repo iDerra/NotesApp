@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, useColorScheme } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stylesMain from './../styles/main_styles';
@@ -15,7 +16,7 @@ const ScreenMain = () => {
   const [noteDate, setNoteDate] = useState<string | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const theme = useColorScheme();
+  const { theme } = useTheme();
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
   const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
@@ -98,11 +99,14 @@ const ScreenMain = () => {
   };
 
   return (
-    <View style={stylesGeneral.container}>
+    <View style={[
+        stylesGeneral.container,
+        { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
+    ]}>
       <Calendar
         onDayPress={(day) => setSelectedDate(day.dateString)}
-        markedDates={getMarkedDates()} // Marcar las fechas con puntos
-        markingType="multi-dot" // Tipo de marcado para permitir múltiples puntos
+        markedDates={getMarkedDates()}
+        markingType="multi-dot"
       />
       
 

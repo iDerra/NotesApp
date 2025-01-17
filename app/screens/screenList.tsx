@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, TouchableWithoutFeedback, TextInput, FlatList, Modal, useColorScheme } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableWithoutFeedback, TextInput, FlatList, Modal } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 import stylesList from './../styles/list_styles'
 import stylesGeneral from './../styles/general_styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,7 +15,7 @@ const ScreenList = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newListItem, setNewListItem] = useState('');
   const [expandedListId, setExpandedListId] = useState(null);
-  const theme = useColorScheme();
+  const { theme } = useTheme();
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
   const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
@@ -85,8 +86,11 @@ const ScreenList = () => {
   };
 
   return (
-    <View style={stylesGeneral.container}>
-      <Text style={stylesGeneral.title}>LIST NOTES</Text>
+    <View style={[
+      stylesGeneral.container,
+      { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
+    ]}>
+      <Text style={[stylesGeneral.title, {color: theme === 'dark' ? '#f5f5f5' : '#000000'}]}>LIST NOTES</Text>
       <FlatList
         data={lists}
         keyExtractor={(item) => item.id}
@@ -94,7 +98,7 @@ const ScreenList = () => {
           <TouchableOpacity
             onPress={() => toggleExpandList(item.id)}
             style={{ flex: 1 }}
-            onStartShouldSetResponder={(e) => true} // Inicia el responder en el TouchableOpacity
+            onStartShouldSetResponder={(e) => true}
           >
             <View
               style={[
