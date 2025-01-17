@@ -123,32 +123,37 @@ const ScreenList = () => {
             
               {expandedListId === item.id && (
                 <View>
-                  <FlatList
-                    data={item.items}
-                    renderItem={({ item }) => <Text style={stylesList.listItem}>{item}</Text>}
-                    keyExtractor={(index) => index.toString()}
-                  />
-                  <TouchableWithoutFeedback
-                    onPress={() => {}}
-                  >
+                  <View style={stylesList.containerRow}>
+                  <TouchableWithoutFeedback onPress={() => {}}>
                     <View>
                       <TextInput
-                        style={stylesGeneral.input}
+                        style={stylesList.inputText}
                         placeholder="New item"
                         value={newListItem}
                         onChangeText={setNewListItem}
                       />
                     </View>
                   </TouchableWithoutFeedback>
-                  <TouchableOpacity
-                    style={stylesGeneral.addButton}
-                    onPress={(e) => {
-                      e.stopPropagation();
-                      addItemToList(item.id);
-                    }}
-                  >
-                    <Text style={stylesGeneral.addButtonText}>Add item</Text>
-                  </TouchableOpacity>
+                    <TouchableOpacity
+                      style={stylesList.addButtonList}
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        addItemToList(item.id);
+                      }}
+                    >
+                      <Text style={stylesList.addButtonTextList}>Add item</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <FlatList
+                    data={item.items}
+                    renderItem={({ item }) => (
+                      <View style={stylesList.listItemContainer}>
+                        <View style={stylesList.listItemBullet} />
+                        <Text style={stylesList.listItemText}>{item}</Text>
+                      </View>
+                    )}
+                    keyExtractor={(index) => index.toString()}
+                  />
                 </View>
               )}
             </View>
