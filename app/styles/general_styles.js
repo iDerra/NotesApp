@@ -4,6 +4,7 @@ const stylesGeneral = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        
     },
     header: {
         flexDirection: 'row',

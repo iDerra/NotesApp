@@ -20,6 +20,21 @@ const sytlesTheme = StyleSheet.create({
         fontSize: 18,
         marginRight: 10,
     },
+    backgroundContainer: {
+        flexDirection: 'row',
+        marginVertical: 20,
+        justifyContent: 'space-around',
+    },
+    backgroundThumbnail: {
+        borderWidth: 2,
+        padding: 5,
+        borderRadius: 8,
+    },
+    thumbnailImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 5,
+    }
 });
 
 export default sytlesTheme;
