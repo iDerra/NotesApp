@@ -17,7 +17,7 @@ const ScreenMain = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const { theme } = useTheme();
-  const [backgroundImage, setBackgroundImage] = useState(null); // Estado para el fondo de pantalla
+  const [backgroundImage, setBackgroundImage] = useState(null);
   
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
@@ -108,7 +108,6 @@ const ScreenMain = () => {
     >
       <View style={[
           stylesGeneral.container,
-          { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
       ]}>
         <Calendar
           onDayPress={(day) => setSelectedDate(day.dateString)}

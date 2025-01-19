@@ -18,6 +18,7 @@ const stylesGeneral = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        textAlign: 'center',
     },
     addButton: {
         position: 'absolute',
