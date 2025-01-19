@@ -22,9 +22,9 @@ const ThemeSettings = () => {
 
     return (
         <ImageBackground
-            source={backgroundImage || require('../../assets/images/background2.webp')} // Fondo por defecto si no se selecciona uno
-            style={[stylesGeneral.container, ]} // Centrar contenido
-            resizeMode="cover"
+            source={backgroundImage || require('../../assets/images/background2.webp')} 
+            style={stylesGeneral.backgroundImage}
+            resizeMode="stretch"
         >
             
             <View style={[

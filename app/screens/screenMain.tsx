@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ImageBackground } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,6 +17,8 @@ const ScreenMain = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const { theme } = useTheme();
+  const [backgroundImage, setBackgroundImage] = useState(null); // Estado para el fondo de pantalla
+  
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
   const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
@@ -99,98 +101,104 @@ const ScreenMain = () => {
   };
 
   return (
-    <View style={[
-        stylesGeneral.container,
-        { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
-    ]}>
-      <Calendar
-        onDayPress={(day) => setSelectedDate(day.dateString)}
-        markedDates={getMarkedDates()}
-        markingType="multi-dot"
-      />
-      
+    <ImageBackground
+      source={backgroundImage || require('../../assets/images/background2.webp')} 
+      style={stylesGeneral.backgroundImage}
+      resizeMode="stretch"
+    >
+      <View style={[
+          stylesGeneral.container,
+          { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
+      ]}>
+        <Calendar
+          onDayPress={(day) => setSelectedDate(day.dateString)}
+          markedDates={getMarkedDates()}
+          markingType="multi-dot"
+        />
+        
 
-      <FlatList
-        data={notes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View
-            style={[
-              stylesGeneral.note,
-              {
-                backgroundColor: pastelColors[item.colorIndex],
-                borderTopWidth: 4,
-                borderLeftWidth: 4,
-                borderTopColor: vibrantColors[item.colorIndex],
-                borderLeftColor: vibrantColors[item.colorIndex],
-              },
-            ]}
-          >
+        <FlatList
+          data={notes}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View
+              style={[
+                stylesGeneral.note,
+                {
+                  backgroundColor: pastelColors[item.colorIndex],
+                  borderTopWidth: 4,
+                  borderLeftWidth: 4,
+                  borderTopColor: vibrantColors[item.colorIndex],
+                  borderLeftColor: vibrantColors[item.colorIndex],
+                },
+              ]}
+            >
 
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Text style={stylesGeneral.noteTitle}>{item.title}</Text>
-              <Text style={stylesMain.noteDate}>{item.date}</Text>
-              <TouchableOpacity onPress={() => deleteNote(item.id)} style={stylesGeneral.deleteButton}>
-                <FontAwesome6 name="trash-can" size={20} color="red" />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={stylesGeneral.noteTitle}>{item.title}</Text>
+                <Text style={stylesMain.noteDate}>{item.date}</Text>
+                <TouchableOpacity onPress={() => deleteNote(item.id)} style={stylesGeneral.deleteButton}>
+                  <FontAwesome6 name="trash-can" size={20} color="red" />
+                </TouchableOpacity>
+              </View>
+            
+              <Text>{item.text}</Text>
+            </View>
+          )}
+          style={stylesGeneral.noteList}
+        />
+
+        <Modal visible={isPopupOpen} transparent>
+          <View style={stylesGeneral.modalOverlay}>
+            <View style={stylesGeneral.modalContent}>
+              <TextInput
+                style={stylesGeneral.input}
+                placeholder="Note Title"
+                value={noteTitle}
+                onChangeText={setNoteTitle}
+              />
+              <TextInput
+                style={stylesGeneral.input}
+                placeholder="Note Text"
+                value={noteText}
+                onChangeText={setNoteText}
+                multiline
+              />
+              <Calendar
+                onDayPress={(day) => setNoteDate(day.dateString)}
+                markedDates={ noteDate ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } } : {} }
+              />
+              <View style={stylesGeneral.colorPalette}>
+                {vibrantColors.map((color, index) => (
+                  <TouchableOpacity
+                    key={color}
+                    style={[
+                      stylesGeneral.colorOption,
+                      {
+                        backgroundColor: pastelColors[index],
+                        borderWidth: 2,
+                        borderColor: color,
+                      },
+                    ]}
+                    onPress={() => setNoteColorIndex(index)}
+                  />
+                ))}
+              </View>
+              <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={addNote}>
+                <Text style={stylesGeneral.addButtonTextPopUp}>Add Note</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setIsPopupOpen(false)}>
+                <Text style={stylesGeneral.cancelButton}>Cancel</Text>
               </TouchableOpacity>
             </View>
-          
-            <Text>{item.text}</Text>
           </View>
-        )}
-        style={stylesGeneral.noteList}
-      />
+        </Modal>
 
-      <Modal visible={isPopupOpen} transparent>
-        <View style={stylesGeneral.modalOverlay}>
-          <View style={stylesGeneral.modalContent}>
-            <TextInput
-              style={stylesGeneral.input}
-              placeholder="Note Title"
-              value={noteTitle}
-              onChangeText={setNoteTitle}
-            />
-            <TextInput
-              style={stylesGeneral.input}
-              placeholder="Note Text"
-              value={noteText}
-              onChangeText={setNoteText}
-              multiline
-            />
-            <Calendar
-              onDayPress={(day) => setNoteDate(day.dateString)}
-              markedDates={ noteDate ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } } : {} }
-            />
-            <View style={stylesGeneral.colorPalette}>
-              {vibrantColors.map((color, index) => (
-                <TouchableOpacity
-                  key={color}
-                  style={[
-                    stylesGeneral.colorOption,
-                    {
-                      backgroundColor: pastelColors[index],
-                      borderWidth: 2,
-                      borderColor: color,
-                    },
-                  ]}
-                  onPress={() => setNoteColorIndex(index)}
-                />
-              ))}
-            </View>
-            <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={addNote}>
-              <Text style={stylesGeneral.addButtonTextPopUp}>Add Note</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => setIsPopupOpen(false)}>
-              <Text style={stylesGeneral.cancelButton}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
-      <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
-        <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : 'gray'} />
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
+          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : 'gray'} />
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
