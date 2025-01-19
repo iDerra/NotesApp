@@ -46,9 +46,15 @@ const stylesList = StyleSheet.create({
     borderRadius: 4,
     marginRight: 10,
   },
+
+  checkbox: {
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   listItemText: {
-    fontSize: 16,
-    color: '#333',
+      fontSize: 18,
+      flex: 1,
   },
 });
 

@@ -7,7 +7,7 @@ import { Switch } from 'react-native-switch';
 
 const ThemeSettings = () => {
     const { theme, toggleTheme } = useTheme();
-    const [backgroundImage, setBackgroundImage] = useState(null); // Estado para el fondo de pantalla
+    const [backgroundImage, setBackgroundImage] = useState(null);
 
     const backgrounds = [
         { id: 1, src: require('../../assets/images/background1.jpeg') },

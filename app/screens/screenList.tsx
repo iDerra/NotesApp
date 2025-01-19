@@ -96,7 +96,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
             l.id === updatedList.id ? updatedList : l
         );
         setLists(updatedLists);
-        saveLists(updatedLists); // Guarda los cambios en AsyncStorage
+        saveLists(updatedLists);
     };
 
     navigation.navigate('ListDetails', { list, onListUpdate });
@@ -150,14 +150,13 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
                     </TouchableOpacity>
                   </View>
 
-                  {/* Renderizar los primeros 3 elementos de la lista y tres puntos ("...") si hay más */}
                   <FlatList
-                    data={item.items.slice(0, 2)} // Limitar a 3 elementos
+                    data={item.items.slice(0, 2)}
                     keyExtractor={(subItem, index) => index.toString()}
                     renderItem={({ item: subItem }) => (
                       <View style={stylesList.listItemContainer}>
                         <View style={stylesList.listItemBullet} />
-                        <Text style={stylesList.listItemText}>{subItem}</Text>
+                        <Text style={stylesList.listItemText}>{typeof subItem === 'string' ? subItem : ''}</Text>
                       </View>
                     )}
                     ListFooterComponent={() => (
@@ -165,7 +164,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
                         <View style={stylesList.listItemContainer}>
                           <View style={stylesList.listItemBullet} />
                           <Text style={stylesList.listItemText}>...</Text>
-                      </View>
+                        </View>
                       ) : null
                     )}
                   />
