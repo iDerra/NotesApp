@@ -19,6 +19,8 @@ const ScreenMain = () => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const { theme } = useTheme();
   const { backgroundImage } = useContext(BackgroundContext);
+  const [editingNote, setEditingNote] = useState(null);
+
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
   const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
@@ -55,24 +57,45 @@ const ScreenMain = () => {
     saveNotes(sortedNotes);
   };
   
-  const addNote = () => {
+  const saveNote = () => {
     if (noteTitle.trim() !== '') {
-      const newNote = {
-        id: Date.now().toString(),
-        title: noteTitle,
-        text: noteText || '',
-        colorIndex: noteColorIndex,
-        date: noteDate || new Date().toISOString().split('T')[0],
-      };
-  
-      const updatedNotes = [...notes, newNote];
-      updateNotes(updatedNotes);
+      if (editingNote) {
+        // Editando una nota existente
+        const updatedNotes = notes.map(note =>
+          note.id === editingNote.id
+            ? { ...note, title: noteTitle, text: noteText, colorIndex: noteColorIndex, date: noteDate || note.date }
+            : note
+        );
+        updateNotes(updatedNotes);
+      } else {
+        // Creando una nueva nota
+        const newNote = {
+          id: Date.now().toString(),
+          title: noteTitle,
+          text: noteText || '',
+          colorIndex: noteColorIndex,
+          date: noteDate || new Date().toISOString().split('T')[0],
+        };
+        const updatedNotes = [...notes, newNote];
+        updateNotes(updatedNotes);
+      }
+
       setNoteTitle('');
       setNoteText('');
       setNoteColorIndex(0);
       setNoteDate(null);
+      setEditingNote(null);
       setIsPopupOpen(false);
     }
+  };
+
+  const editNote = (note) => {
+    setEditingNote(note);
+    setNoteTitle(note.title);
+    setNoteText(note.text);
+    setNoteColorIndex(note.colorIndex);
+    setNoteDate(note.date);
+    setIsPopupOpen(true);
   };
   
   const deleteNote = (id: string) => {
@@ -198,9 +221,14 @@ const ScreenMain = () => {
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={stylesGeneral.noteTitle}>{item.title}</Text>
                 <Text style={stylesMain.noteDate}>{item.date}</Text>
-                <TouchableOpacity onPress={() => deleteNote(item.id)} style={stylesGeneral.deleteButton}>
-                  <FontAwesome6 name="trash-can" size={20} color="red" />
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <TouchableOpacity onPress={() => editNote(item)} style={{marginRight: 15}}>
+                    <FontAwesome6 name="edit" size={20} color="blue" />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => deleteNote(item.id)} style={stylesGeneral.deleteButton}>
+                    <FontAwesome6 name="trash-can" size={20} color="red" />
+                  </TouchableOpacity>
+                </View>
               </View>
             
               <Text style={{fontSize: 16, marginTop: 5, marginHorizontal: 5}}>{item.text}</Text>
@@ -279,8 +307,10 @@ const ScreenMain = () => {
                   );
                 })}
               </View>
-              <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={addNote}>
-                <Text style={stylesGeneral.addButtonTextPopUp}>Add Note</Text>
+              <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={saveNote}>
+                <Text style={stylesGeneral.addButtonTextPopUp}>
+                  {editingNote ? 'Save Changes' : 'Add Note'}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setIsPopupOpen(false)}>
                 <Text style={stylesGeneral.cancelButton}>Cancel</Text>
