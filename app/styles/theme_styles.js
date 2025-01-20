@@ -3,6 +3,9 @@ import { StyleSheet } from 'react-native';
 const sytlesTheme = StyleSheet.create({
     containerThemes: {
         padding: 20,
+        marginVertical: 20,
+        marginHorizontal: 50,
+        borderRadius: 30
     },
     title: {
         fontSize: 24,

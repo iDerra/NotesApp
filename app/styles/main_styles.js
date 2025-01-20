@@ -1,11 +1,10 @@
 import { StyleSheet } from 'react-native';
 
-const stylesMain = StyleSheet.create({    
-    noteDate: {
-      fontSize: 14,
-      color: '#888',
-      marginTop: 5,
-    },
-  });
-
+const stylesMain = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    padding: 10,
+  },
+});
 export default stylesMain;

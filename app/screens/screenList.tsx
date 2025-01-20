@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, TextInput, FlatList, Modal, ImageBackground } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import stylesList from './../styles/list_styles';
@@ -9,8 +9,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useFocusEffect } from '@react-navigation/native';
-
-
+import BackgroundContext from '../context/BackgroundContext';
 
 type ScreenListProps = NativeStackScreenProps<RootStackParamList, 'list'>;
 
@@ -21,7 +20,8 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const { theme } = useTheme();
-  const [backgroundImage, setBackgroundImage] = useState(null);
+  const { backgroundImage } = useContext(BackgroundContext);
+
   
 
   const vibrantColors = ['#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF'];
@@ -109,7 +109,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
       resizeMode="stretch"
     >
       <View style={stylesGeneral.container}>
-        <Text style={[stylesGeneral.title, { color:'#f5f5f5' }]}>LIST NOTES</Text>
+        <Text style={[stylesGeneral.title, { backgroundColor: '#f5f5f5', borderRadius: 20, padding: 10, marginHorizontal: 175, color:'black' }]}>LIST NOTES</Text>
           <FlatList
             data={lists}
             keyExtractor={(item) => item.id}
@@ -167,6 +167,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
                         </View>
                       ) : null
                     )}
+                    showsVerticalScrollIndicator={false}
                   />
                 </View>
               </TouchableOpacity>

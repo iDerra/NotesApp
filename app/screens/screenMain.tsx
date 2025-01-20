@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ImageBackground } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import { Calendar } from 'react-native-calendars';
@@ -7,6 +7,7 @@ import stylesMain from './../styles/main_styles';
 import stylesGeneral from '../styles/general_styles';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import BackgroundContext from '../context/BackgroundContext';
 
 const ScreenMain = () => {
   const [notes, setNotes] = useState([]);
@@ -17,8 +18,7 @@ const ScreenMain = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const { theme } = useTheme();
-  const [backgroundImage, setBackgroundImage] = useState(null);
-  
+  const { backgroundImage } = useContext(BackgroundContext);
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
   const pastelColors = [ '#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff' ];
@@ -28,13 +28,16 @@ const ScreenMain = () => {
       try {
         const storedNotes = await AsyncStorage.getItem('notes');
         if (storedNotes) {
-          setNotes(JSON.parse(storedNotes));
+          const parsedNotes = JSON.parse(storedNotes);
+  
+          const sortedNotes = parsedNotes.sort((a, b) => new Date(a.date) - new Date(b.date));
+          setNotes(sortedNotes);
         }
       } catch (error) {
         console.error('Error while loading notes', error);
       }
     };
-
+  
     loadNotes();
   }, []);
 
@@ -46,6 +49,12 @@ const ScreenMain = () => {
     }
   };
 
+  const updateNotes = (newNotes) => {
+    const sortedNotes = newNotes.sort((a, b) => new Date(a.date) - new Date(b.date));
+    setNotes(sortedNotes);
+    saveNotes(sortedNotes);
+  };
+  
   const addNote = () => {
     if (noteTitle.trim() !== '') {
       const newNote = {
@@ -55,11 +64,9 @@ const ScreenMain = () => {
         colorIndex: noteColorIndex,
         date: noteDate || new Date().toISOString().split('T')[0],
       };
-
+  
       const updatedNotes = [...notes, newNote];
-      setNotes(updatedNotes);
-      saveNotes(updatedNotes);
-
+      updateNotes(updatedNotes);
       setNoteTitle('');
       setNoteText('');
       setNoteColorIndex(0);
@@ -67,11 +74,10 @@ const ScreenMain = () => {
       setIsPopupOpen(false);
     }
   };
-
+  
   const deleteNote = (id: string) => {
     const updatedNotes = notes.filter(note => note.id !== id);
-    setNotes(updatedNotes);
-    saveNotes(updatedNotes);
+    updateNotes(updatedNotes);
   };
 
   const getMarkedDates = () => {
@@ -100,6 +106,31 @@ const ScreenMain = () => {
     return markedDates;
   };
 
+  const getOpacity = (noteDate) => {
+    const today = new Date();
+    const noteDateObj = new Date(noteDate);
+    const diffTime = today - noteDateObj;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays > 1) {
+      return 0.7;
+    }
+    return 1;
+  };
+
+  const darkenColor = (color, factor = 0.2) => {
+    const hex = color.startsWith('#') ? color.substring(1) : color;
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+  
+    const newR = Math.max(0, Math.min(255, r - r * factor));
+    const newG = Math.max(0, Math.min(255, g - g * factor));
+    const newB = Math.max(0, Math.min(255, b - b * factor));
+  
+    return `#${Math.round(newR).toString(16).padStart(2, '0')}${Math.round(newG).toString(16).padStart(2, '0')}${Math.round(newB).toString(16).padStart(2, '0')}`;
+  };
+
   return (
     <ImageBackground
       source={backgroundImage || require('../../assets/images/background2.webp')} 
@@ -110,10 +141,40 @@ const ScreenMain = () => {
           stylesGeneral.container,
       ]}>
         <Calendar
-          onDayPress={(day) => setSelectedDate(day.dateString)}
-          markedDates={getMarkedDates()}
-          markingType="multi-dot"
-        />
+        onDayPress={(day) => setSelectedDate(day.dateString)}
+        markedDates={getMarkedDates()}
+        markingType="multi-dot"
+        theme={{
+          calendarBackground: '#f7f7f7',
+          textSectionTitleColor: '#555',
+          selectedDayBackgroundColor: '#eeeeee',
+          selectedDayTextColor: '#000000',
+          todayTextColor: '#000000',
+          dayTextColor: '#888',
+          textDisabledColor: '#ccc',
+          dotColor: '#006064',
+          selectedDotColor: '#006064',
+          arrowColor: '#333',
+          monthTextColor: '#333',
+          textDayFontSize: 16,
+          textMonthFontSize: 16,
+          textDayHeaderFontSize: 14,
+          textDayFontWeight: '500',
+          textMonthFontWeight: '700',
+          textDayHeaderFontWeight: '700',
+        }}
+        style={{
+          elevation: 4,
+          shadowColor: 'rgba(0, 0, 0, 0.1)',
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 1,
+          shadowRadius: 10,
+          borderRadius: 12,
+          padding: 10,
+          width: '90%',
+          alignSelf: 'center',
+        }}
+      />
         
 
         <FlatList
@@ -129,6 +190,7 @@ const ScreenMain = () => {
                   borderLeftWidth: 4,
                   borderTopColor: vibrantColors[item.colorIndex],
                   borderLeftColor: vibrantColors[item.colorIndex],
+                  opacity: getOpacity(item.date),
                 },
               ]}
             >
@@ -141,10 +203,11 @@ const ScreenMain = () => {
                 </TouchableOpacity>
               </View>
             
-              <Text>{item.text}</Text>
+              <Text style={{fontSize: 16, marginTop: 5, marginHorizontal: 5}}>{item.text}</Text>
             </View>
           )}
           style={stylesGeneral.noteList}
+          showsVerticalScrollIndicator={false}
         />
 
         <Modal visible={isPopupOpen} transparent>
@@ -152,13 +215,13 @@ const ScreenMain = () => {
             <View style={stylesGeneral.modalContent}>
               <TextInput
                 style={stylesGeneral.input}
-                placeholder="Note Title"
+                placeholder="Title"
                 value={noteTitle}
                 onChangeText={setNoteTitle}
               />
               <TextInput
-                style={stylesGeneral.input}
-                placeholder="Note Text"
+                style={stylesGeneral.inputDescription}
+                placeholder="Description"
                 value={noteText}
                 onChangeText={setNoteText}
                 multiline
@@ -166,22 +229,55 @@ const ScreenMain = () => {
               <Calendar
                 onDayPress={(day) => setNoteDate(day.dateString)}
                 markedDates={ noteDate ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } } : {} }
+                theme={{
+                  calendarBackground: '#f7f7f7',
+                  textSectionTitleColor: '#555',
+                  selectedDayBackgroundColor: '#eeeeee',
+                  selectedDayTextColor: '#000000',
+                  todayTextColor: '#000000',
+                  dayTextColor: '#888',
+                  textDisabledColor: '#ccc',
+                  dotColor: '#006064',
+                  selectedDotColor: '#006064',
+                  arrowColor: '#333',
+                  monthTextColor: '#333',
+                  textDayFontSize: 16,
+                  textMonthFontSize: 16,
+                  textDayHeaderFontSize: 14,
+                  textDayFontWeight: '500',
+                  textMonthFontWeight: '700',
+                  textDayHeaderFontWeight: '700',
+                }}
+                style={{
+                  elevation: 4,
+                  shadowColor: 'rgba(0, 0, 0, 0.1)',
+                  shadowOffset: { width: 0, height: 4 },
+                  shadowOpacity: 1,
+                  shadowRadius: 10,
+                  borderRadius: 12,
+                  padding: 10,
+                  width: '90%',
+                  alignSelf: 'center',
+                }}
               />
               <View style={stylesGeneral.colorPalette}>
-                {vibrantColors.map((color, index) => (
-                  <TouchableOpacity
-                    key={color}
-                    style={[
-                      stylesGeneral.colorOption,
-                      {
-                        backgroundColor: pastelColors[index],
-                        borderWidth: 2,
-                        borderColor: color,
-                      },
-                    ]}
-                    onPress={() => setNoteColorIndex(index)}
-                  />
-                ))}
+                {vibrantColors.map((color, index) => {
+                  const isSelected = noteColorIndex === index;
+                  return (
+                    <TouchableOpacity
+                      key={color}
+                      style={[
+                        stylesGeneral.colorOption,
+                        {
+                          backgroundColor: isSelected ? darkenColor(pastelColors[index], 0.1) : pastelColors[index],
+                          borderWidth: 2,
+                          borderColor: isSelected ? 'black' : color,
+                        },
+                      ]}
+                      onPress={() => setNoteColorIndex(index)}
+                    />
+                  );
+                })}
               </View>
               <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={addNote}>
                 <Text style={stylesGeneral.addButtonTextPopUp}>Add Note</Text>

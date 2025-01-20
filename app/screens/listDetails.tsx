@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, FlatList, ImageBackground, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
 import stylesList from './../styles/list_styles';
 import stylesGeneral from './../styles/general_styles';
@@ -6,6 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import BackgroundContext from '../context/BackgroundContext';
 
 type ListDetailsProps = NativeStackScreenProps<RootStackParamList, 'ListDetails'>;
 
@@ -14,7 +15,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
     const [newItem, setNewItem] = useState('');
     const [items, setItems] = useState<string[]>(list?.items || []);
     const [completedItems, setCompletedItems] = useState<boolean[]>(new Array(items.length).fill(false));
-
+    const { backgroundImage } = useContext(BackgroundContext);
 
     const vibrantColors = ['#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF'];
     const pastelColors = ['#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff'];
@@ -113,12 +114,12 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
     if (!list) {
         return (
             <ImageBackground
-                source={require('../../assets/images/background2.webp')}
+                source={backgroundImage || require('../../assets/images/background2.webp')} 
                 style={stylesGeneral.backgroundImage}
                 resizeMode="stretch"
             >
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ fontSize: 18, color: 'red' }}>No list found</Text>
+                    <Text style={{ backgroundColor: '#f5f5f5', padding: 15, borderRadius: 20, fontSize: 18, color: 'black' }}>No list selected</Text>
                 </View>
             </ImageBackground>
         );
@@ -126,7 +127,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
 
     return (
         <ImageBackground
-            source={require('../../assets/images/background2.webp')}
+            source={backgroundImage || require('../../assets/images/background2.webp')} 
             style={stylesGeneral.backgroundImage}
             resizeMode="stretch"
         >
@@ -158,7 +159,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
                                 >
                                     <MaterialCommunityIcons
                                         name={completedItems[index] ? 'checkbox-marked' : 'checkbox-blank'}
-                                        size={24}
+                                        size={28}
                                         color={completedItems[index] ? 'green' : 'gray'}
                                     />
                                 </TouchableOpacity>
@@ -173,27 +174,22 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
                             </View>
                         )}
                         keyExtractor={(item, index) => index.toString()}
+                        showsVerticalScrollIndicator={false}
                     />
                 ) : (
                     <Text style={{ fontSize: 16, color: 'gray', marginBottom: 20 }}>No items yet. Add one below!</Text>
                 )}
 
-                <View style={{ marginTop: 20 }}>
+                <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
                     <TextInput
-                        style={{
-                            height: 40,
-                            borderColor: 'gray',
-                            borderWidth: 1,
-                            marginBottom: 10,
-                            paddingHorizontal: 8,
-                            backgroundColor: '#fff',
-                            borderRadius: 4,
-                        }}
-                        placeholder="Add new item"
+                        style={stylesList.inputItem}
+                        placeholder="New item..."
                         value={newItem}
                         onChangeText={setNewItem}
                     />
-                    <Button title="Add Item" onPress={addItem} />
+                    <TouchableOpacity style={[stylesGeneral.addButtonPopUp, { height: 40, marginRight: 100} ]} onPress={addItem}>
+                        <Text style={stylesGeneral.addButtonTextPopUp}>Add Item</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         </ImageBackground>
