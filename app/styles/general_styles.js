@@ -72,7 +72,7 @@ const stylesGeneral = StyleSheet.create({
     colorPalette: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginHorizontal: 50,
+        marginHorizontal: 25,
         marginVertical: 20
     },
     colorOption: {

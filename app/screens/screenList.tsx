@@ -102,6 +102,19 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
     navigation.navigate('ListDetails', { list, onListUpdate });
   };
 
+  const darkenColor = (color, factor = 0.2) => {
+    const hex = color.startsWith('#') ? color.substring(1) : color;
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+  
+    const newR = Math.max(0, Math.min(255, r - r * factor));
+    const newG = Math.max(0, Math.min(255, g - g * factor));
+    const newB = Math.max(0, Math.min(255, b - b * factor));
+  
+    return `#${Math.round(newR).toString(16).padStart(2, '0')}${Math.round(newG).toString(16).padStart(2, '0')}${Math.round(newB).toString(16).padStart(2, '0')}`;
+  };
+
   return (
     <ImageBackground
       source={backgroundImage || require('../../assets/images/background2.webp')} 
@@ -109,7 +122,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
       resizeMode="stretch"
     >
       <View style={stylesGeneral.container}>
-        <Text style={[stylesGeneral.title, { backgroundColor: '#f5f5f5', borderRadius: 20, padding: 10, marginHorizontal: 175, color:'black' }]}>LIST NOTES</Text>
+        <Text style={[stylesGeneral.title, { backgroundColor: '#f5f5f5', borderRadius: 20, padding: 10, marginHorizontal: 50, color:'black' }]}>LIST NOTES</Text>
           <FlatList
             data={lists}
             keyExtractor={(item) => item.id}
@@ -180,25 +193,28 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
             <View style={stylesGeneral.modalContent}>
               <TextInput
                 style={stylesGeneral.input}
-                placeholder="Título de la lista"
+                placeholder="Title"
                 value={listTitle}
                 onChangeText={setListTitle}
               />
               <View style={stylesGeneral.colorPalette}>
-                {vibrantColors.map((color, index) => (
-                  <TouchableOpacity
-                    key={color}
-                    style={[
-                      stylesGeneral.colorOption,
-                      {
-                        backgroundColor: pastelColors[index],
-                        borderWidth: 2,
-                        borderColor: color,
-                      },
-                    ]}
-                    onPress={() => setListColorIndex(index)}
-                  />
-                ))}
+                {vibrantColors.map((color, index) => {
+                  const isSelected = listColorIndex === index;
+                  return (
+                    <TouchableOpacity
+                      key={color}
+                      style={[
+                        stylesGeneral.colorOption,
+                        {
+                          backgroundColor: isSelected ? darkenColor(pastelColors[index], 0.05) : pastelColors[index],
+                          borderWidth: 2,
+                          borderColor: isSelected ? 'black' : color,
+                        },
+                      ]}
+                      onPress={() => setListColorIndex(index)}
+                    />
+                  );
+                })}
               </View>
               <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={addList}>
                 <Text style={stylesGeneral.addButtonTextPopUp}>Add list</Text>
@@ -211,7 +227,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
         </Modal>
 
         <TouchableOpacity onPress={() => setIsModalVisible(true)} style={stylesGeneral.addButton}>
-          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : 'gray'} />
+          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : '#555'} />
         </TouchableOpacity>
       </View>
     </ImageBackground>

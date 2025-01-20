@@ -187,7 +187,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
                         value={newItem}
                         onChangeText={setNewItem}
                     />
-                    <TouchableOpacity style={[stylesGeneral.addButtonPopUp, { height: 40, marginRight: 100} ]} onPress={addItem}>
+                    <TouchableOpacity style={[stylesGeneral.addButtonPopUp, { height: 40, marginRight: 25} ]} onPress={addItem}>
                         <Text style={stylesGeneral.addButtonTextPopUp}>Add Item</Text>
                     </TouchableOpacity>
                 </View>

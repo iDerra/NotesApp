@@ -269,7 +269,7 @@ const ScreenMain = () => {
                       style={[
                         stylesGeneral.colorOption,
                         {
-                          backgroundColor: isSelected ? darkenColor(pastelColors[index], 0.1) : pastelColors[index],
+                          backgroundColor: isSelected ? darkenColor(pastelColors[index], 0.05) : pastelColors[index],
                           borderWidth: 2,
                           borderColor: isSelected ? 'black' : color,
                         },
@@ -290,7 +290,7 @@ const ScreenMain = () => {
         </Modal>
 
         <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
-          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : 'gray'} />
+          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : '#555'} />
         </TouchableOpacity>
       </View>
     </ImageBackground>

@@ -14,8 +14,9 @@
     "android": {
       "package": "com.iderra.notesapp",
       "versionCode": 1,
+      "permissions": ["WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/notes-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
