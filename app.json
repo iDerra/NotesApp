@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "notesApp",
+    "name": "Notes",
     "slug": "notesApp",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/notes-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -18,22 +18,22 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/notes-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/notes-icon.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/notes-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#fb79a7"
         }
       ]
     ],

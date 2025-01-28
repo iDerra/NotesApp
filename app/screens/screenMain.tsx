@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ImageBackground } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ImageBackground, useWindowDimensions } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stylesMain from './../styles/main_styles';
@@ -20,6 +20,7 @@ const ScreenMain = ({ navigation }) => {
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [editingNote, setEditingNote] = useState(null);
   const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
+  const windowHeight = useWindowDimensions().height;
 
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
@@ -247,86 +248,86 @@ const ScreenMain = ({ navigation }) => {
           style={stylesGeneral.noteList}
           showsVerticalScrollIndicator={false}
         />
-
-        <Modal visible={isPopupOpen} transparent>
-          <View style={stylesGeneral.modalOverlay}>
-            <View style={stylesGeneral.modalContent}>
-              <TextInput
-                style={stylesGeneral.input}
-                placeholder="Title"
-                value={noteTitle}
-                onChangeText={setNoteTitle}
-              />
-              <TextInput
-                style={stylesMain.inputDescription}
-                placeholder="Description"
-                value={noteText}
-                onChangeText={setNoteText}
-                multiline
-              />
-              <Calendar
-                onDayPress={(day) => setNoteDate(day.dateString)}
-                markedDates={ noteDate ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } } : {} }
-                theme={{
-                  calendarBackground: '#f7f7f7',
-                  textSectionTitleColor: '#555',
-                  selectedDayBackgroundColor: '#eeeeee',
-                  selectedDayTextColor: '#000000',
-                  todayTextColor: '#000000',
-                  dayTextColor: '#888',
-                  textDisabledColor: '#ccc',
-                  dotColor: '#006064',
-                  selectedDotColor: '#006064',
-                  arrowColor: '#333',
-                  monthTextColor: '#333',
-                  textDayFontSize: 16,
-                  textMonthFontSize: 16,
-                  textDayHeaderFontSize: 14,
-                  textDayFontWeight: '500',
-                  textMonthFontWeight: '700',
-                  textDayHeaderFontWeight: '700',
-                }}
-                style={{
-                  elevation: 4,
-                  shadowColor: 'rgba(0, 0, 0, 0.1)',
-                  shadowOffset: { width: 0, height: 4 },
-                  shadowOpacity: 1,
-                  shadowRadius: 10,
-                  borderRadius: 12,
-                  padding: 10,
-                  width: '90%',
-                  alignSelf: 'center',
-                }}
-              />
-              <View style={stylesGeneral.colorPalette}>
-                {vibrantColors.map((color, index) => {
-                  const isSelected = noteColorIndex === index;
-                  return (
-                    <TouchableOpacity
-                      key={color}
-                      style={[
-                        stylesGeneral.colorOption,
-                        {
-                          backgroundColor: isSelected ? darkenColor(pastelColors[index], 0.05) : pastelColors[index],
-                          borderWidth: 2,
-                          borderColor: isSelected ? 'black' : color,
-                        },
-                      ]}
-                      onPress={() => setNoteColorIndex(index)}
-                    />
-                  );
-                })}
+        
+        <Modal visible={isPopupOpen} transparent>>
+            <View style={[stylesGeneral.modalOverlay, {minHeight: Math.round(windowHeight)}]}>
+              <View style={stylesGeneral.modalContent}>
+                <TextInput
+                  style={stylesGeneral.input}
+                  placeholder="Title"
+                  value={noteTitle}
+                  onChangeText={setNoteTitle}
+                />
+                <TextInput
+                  style={stylesMain.inputDescription}
+                  placeholder="Description"
+                  value={noteText}
+                  onChangeText={setNoteText}
+                  multiline
+                />
+                <Calendar
+                  onDayPress={(day) => setNoteDate(day.dateString)}
+                  markedDates={ noteDate ? { [noteDate]: { selected: true, selectedColor: '#00d68f' } } : {} }
+                  theme={{
+                    calendarBackground: '#f7f7f7',
+                    textSectionTitleColor: '#555',
+                    selectedDayBackgroundColor: '#eeeeee',
+                    selectedDayTextColor: '#000000',
+                    todayTextColor: '#000000',
+                    dayTextColor: '#888',
+                    textDisabledColor: '#ccc',
+                    dotColor: '#006064',
+                    selectedDotColor: '#006064',
+                    arrowColor: '#333',
+                    monthTextColor: '#333',
+                    textDayFontSize: 16,
+                    textMonthFontSize: 16,
+                    textDayHeaderFontSize: 14,
+                    textDayFontWeight: '500',
+                    textMonthFontWeight: '700',
+                    textDayHeaderFontWeight: '700',
+                  }}
+                  style={{
+                    elevation: 4,
+                    shadowColor: 'rgba(0, 0, 0, 0.1)',
+                    shadowOffset: { width: 0, height: 4 },
+                    shadowOpacity: 1,
+                    shadowRadius: 10,
+                    borderRadius: 12,
+                    padding: 10,
+                    width: '90%',
+                    alignSelf: 'center',
+                  }}
+                />
+                <View style={stylesGeneral.colorPalette}>
+                  {vibrantColors.map((color, index) => {
+                    const isSelected = noteColorIndex === index;
+                    return (
+                      <TouchableOpacity
+                        key={color}
+                        style={[
+                          stylesGeneral.colorOption,
+                          {
+                            backgroundColor: isSelected ? darkenColor(pastelColors[index], 0.05) : pastelColors[index],
+                            borderWidth: 2,
+                            borderColor: isSelected ? 'black' : color,
+                          },
+                        ]}
+                        onPress={() => setNoteColorIndex(index)}
+                      />
+                    );
+                  })}
+                </View>
+                <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={saveNote}>
+                  <Text style={stylesGeneral.addButtonTextPopUp}>
+                    {editingNote ? 'Save Changes' : 'Add Note'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setIsPopupOpen(false)}>
+                  <Text style={stylesGeneral.cancelButton}>Cancel</Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity style={stylesGeneral.addButtonPopUp} onPress={saveNote}>
-                <Text style={stylesGeneral.addButtonTextPopUp}>
-                  {editingNote ? 'Save Changes' : 'Add Note'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setIsPopupOpen(false)}>
-                <Text style={stylesGeneral.cancelButton}>Cancel</Text>
-              </TouchableOpacity>
             </View>
-          </View>
         </Modal>
 
         <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
