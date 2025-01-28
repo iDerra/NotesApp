@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, ImageBackground, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, ImageBackground, TextInput, Alert, TouchableOpacity } from 'react-native';
 import stylesList from './../styles/list_styles';
 import stylesGeneral from './../styles/general_styles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils'; // Ajusta la ruta si es necesario
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils';
 
 type ListDetailsProps = NativeStackScreenProps<RootStackParamList, 'ListDetails'>;
 

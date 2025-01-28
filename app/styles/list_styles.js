@@ -1,28 +1,29 @@
 import { StyleSheet } from 'react-native';
 
 const stylesList = StyleSheet.create({
+
   listItem: {
     fontSize: 16,
     marginTop: 5,
   },
-  containerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 10,
+
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    backgroundColor: 'white', 
+    borderRadius: 20, 
+    padding: 10, 
+    marginHorizontal: 50
   },
-  addButtonList: {
-    backgroundColor: '#00d68f',
-    paddingVertical: 7,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    alignSelf: 'center',
-  },
+
   listItemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 5,
     marginHorizontal: 15,
   },
+
   listItemBullet: {
     width: 6,
     height: 6,
@@ -36,10 +37,12 @@ const stylesList = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+
   listItemText: {
       fontSize: 18,
       flex: 1,
   },
+
   inputItem: {
     flex: 1, 
     marginRight: 20,
@@ -56,7 +59,8 @@ const stylesList = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-},
+  },
+  
 });
 
 export default stylesList;

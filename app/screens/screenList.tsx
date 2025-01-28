@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, FlatList, Modal, ImageBackground } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
 import stylesList from './../styles/list_styles';
 import stylesGeneral from './../styles/general_styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +8,7 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useFocusEffect } from '@react-navigation/native';
-import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils'; // Ajusta la ruta si es necesario
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils';
 
 
 type ScreenListProps = NativeStackScreenProps<RootStackParamList, 'list'>;
@@ -20,10 +19,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
   const [listColorIndex, setListColorIndex] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
-  const { theme } = useTheme();
   const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
-
-  
 
   const vibrantColors = ['#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF'];
   const pastelColors = ['#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff'];
@@ -131,7 +127,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
       resizeMode="stretch"
     >
       <View style={stylesGeneral.container}>
-        <Text style={[stylesGeneral.title, { backgroundColor: '#f5f5f5', borderRadius: 20, padding: 10, marginHorizontal: 50, color:'black' }]}>LIST NOTES</Text>
+        <Text style={stylesList.title}>LIST NOTES</Text>
           <FlatList
             data={lists}
             keyExtractor={(item) => item.id}
@@ -236,7 +232,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
         </Modal>
 
         <TouchableOpacity onPress={() => setIsModalVisible(true)} style={stylesGeneral.addButton}>
-          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : '#555'} />
+          <MaterialCommunityIcons name="note-plus" size={36} color= '#555' />
         </TouchableOpacity>
       </View>
     </ImageBackground>

@@ -1,25 +1,18 @@
 import { StyleSheet } from 'react-native';
 
 const stylesGeneral = StyleSheet.create({
+
     backgroundImage: {
         flex: 1,
         width: '100%',
         height: '100%',
     },
+
     container: {
         flex: 1,
         padding: 20,
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
+
     addButton: {
         position: 'absolute',
         bottom: 20,
@@ -35,6 +28,7 @@ const stylesGeneral = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+
     addButtonPopUp: {
         backgroundColor: '#00d68f',
         paddingVertical: 10,
@@ -42,39 +36,46 @@ const stylesGeneral = StyleSheet.create({
         borderRadius: 8,
         alignSelf: 'center',
     },
+
     addButtonTextPopUp: {
         color: '#333',
         fontWeight: 'bold',
         textAlign: 'center',
         fontSize: 16,
     },
+
     note: {
         padding: 15,
         borderRadius: 8,
         marginBottom: 10,
     },
+
     noteTitle: {
         fontSize: 20,
         fontWeight: 'bold',
     },
+
     modalOverlay: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
+
     modalContent: {
         width: '80%',
         padding: 20,
         backgroundColor: 'white',
         borderRadius: 10,
     },
+
     colorPalette: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginHorizontal: 25,
         marginVertical: 20
     },
+
     colorOption: {
         width: 30,
         height: 30,
@@ -93,6 +94,7 @@ const stylesGeneral = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+
     deleteButton: {
         alignSelf: 'center',
         justifyContent: 'center',
@@ -101,6 +103,7 @@ const stylesGeneral = StyleSheet.create({
         height: 20,
         backgroundColor: 'transparent',
     },
+
     input: {
         height: 40,
         borderColor: '#d1d1d1',
@@ -118,29 +121,11 @@ const stylesGeneral = StyleSheet.create({
         elevation: 2,
         fontWeight: 'bold',
     },
-    inputDescription: {
-        height: 100,
-        borderColor: '#d1d1d1',
-        borderWidth: 1,
-        marginBottom: 10,
-        marginHorizontal: 20,
-        paddingHorizontal: 12,
-        paddingTop: 10,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 8,
-        fontSize: 16,
-        textAlignVertical: 'top',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
 
     noteList: {
         marginTop: 20,
     },
 
-    });
+});
 
 export default stylesGeneral;

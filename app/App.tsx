@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { View, Text, StyleSheet } from 'react-native';
-import { useTheme } from './context/ThemeContext';
+import { Text, StyleSheet } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 import ScreenMain from './screens/screenMain';
@@ -38,41 +37,29 @@ function Tabs() {
 }
 
 export default function App() {
-    const { theme } = useTheme();
     const [headerTitle, setHeaderTitle] = useState('Notes App');
 
     return (
         <Drawer.Navigator
             screenOptions={({ route }) => ({
-                drawerStyle: {
-                    backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5',
-                },
-                headerStyle: {
-                    backgroundColor: theme === 'dark' ? '#000000' : '#ffffff',
-                },
-                headerTintColor: theme === 'dark' ? '#f5f5f5' : '#000000',
+
                 headerTitle: () => (
                     <Text
                         style={[
                             styles.headerTitle, 
-                            { color: theme === 'dark' ? '#f5f5f5' : '#000000' }
                         ]}
                     >
-                        {route.name === 'Home' ? 'Notes App' : 'Theme Settings'}
+                        {route.name === 'Home' ? 'Notes App' : 'Customization'}
                     </Text>
                 ),
                 headerTitleAlign: 'center',
-                drawerLabelStyle: {
-                    color: theme === 'dark' ? '#f5f5f5' : '#000000',
-                },
             })}
         >
             <Drawer.Screen
                 name="Home"
                 options={{
                     drawerIcon: ({ size }) => {
-                        const iconColor = theme === 'dark' ? '#f5f5f5' : '#000000';
-                        return <FontAwesome name="home" size={size} color={iconColor} />;
+                        return <FontAwesome name="home" size={size} color={'black'} />;
                     },
                 }}
             >
@@ -80,22 +67,20 @@ export default function App() {
             </Drawer.Screen>
 
             <Drawer.Screen
-                name="Theme"
+                name="Customization"
                 component={ThemeSettings}
                 options={{
                     headerTitle: () => (
                         <Text
                             style={[
                                 styles.headerTitle, 
-                                { color: theme === 'dark' ? '#f5f5f5' : '#000000' }
                             ]}
                         >
-                            Theme Settings
+                            Customization
                         </Text>
                     ),
                     drawerIcon: ({ size }) => {
-                        const iconColor = theme === 'dark' ? '#f5f5f5' : '#000000';
-                        return <FontAwesome name="paint-brush" size={size} color={iconColor} />;
+                        return <FontAwesome name="paint-brush" size={size} color={'black'} />;
                     },
                 }}
             />

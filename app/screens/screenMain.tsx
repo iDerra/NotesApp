@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Modal, ImageBackground } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import stylesMain from './../styles/main_styles';
 import stylesGeneral from '../styles/general_styles';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils'; // Ajusta la ruta si es necesario
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils';
 import { useFocusEffect } from '@react-navigation/native'; 
 
 
@@ -19,7 +18,6 @@ const ScreenMain = ({ navigation }) => {
   const [noteDate, setNoteDate] = useState<string | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
-  const { theme } = useTheme();
   const [editingNote, setEditingNote] = useState(null);
   const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
 
@@ -74,7 +72,6 @@ const ScreenMain = ({ navigation }) => {
   const saveNote = () => {
     if (noteTitle.trim() !== '') {
       if (editingNote) {
-        // Editando una nota existente
         const updatedNotes = notes.map(note =>
           note.id === editingNote.id
             ? { ...note, title: noteTitle, text: noteText, colorIndex: noteColorIndex, date: noteDate || note.date }
@@ -82,7 +79,6 @@ const ScreenMain = ({ navigation }) => {
         );
         updateNotes(updatedNotes);
       } else {
-        // Creando una nueva nota
         const newNote = {
           id: Date.now().toString(),
           title: noteTitle,
@@ -234,7 +230,7 @@ const ScreenMain = ({ navigation }) => {
 
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Text style={stylesGeneral.noteTitle}>{item.title}</Text>
-                <Text style={stylesMain.noteDate}>{item.date}</Text>
+                <Text>{item.date}</Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <TouchableOpacity onPress={() => editNote(item)} style={{marginRight: 15}}>
                     <FontAwesome6 name="edit" size={20} color="blue" />
@@ -262,7 +258,7 @@ const ScreenMain = ({ navigation }) => {
                 onChangeText={setNoteTitle}
               />
               <TextInput
-                style={stylesGeneral.inputDescription}
+                style={stylesMain.inputDescription}
                 placeholder="Description"
                 value={noteText}
                 onChangeText={setNoteText}
@@ -334,7 +330,7 @@ const ScreenMain = ({ navigation }) => {
         </Modal>
 
         <TouchableOpacity onPress={() => setIsPopupOpen(true)} style={stylesGeneral.addButton}>
-          <MaterialCommunityIcons name="note-plus" size={36} color={theme === 'dark' ? 'white' : '#555'} />
+          <MaterialCommunityIcons name="note-plus" size={36} color= '#555' />
         </TouchableOpacity>
       </View>
     </ImageBackground>
