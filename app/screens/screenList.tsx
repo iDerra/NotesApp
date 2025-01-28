@@ -38,13 +38,17 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
     loadLists();
   }, []);
 
-  useEffect(() => {
-    const getWallpaper = async () => {
-      const id = await loadWallpaperId();
-      setSelectedWallpaperId(id);
-    };
-    getWallpaper();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      const getWallpaper = async () => {
+        const id = await loadWallpaperId();
+        setSelectedWallpaperId(id);
+      };
+      getWallpaper(); 
+  
+      return () => {};
+    }, [])
+  );
 
   const saveLists = async (newLists) => {
     try {

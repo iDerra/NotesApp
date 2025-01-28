@@ -7,6 +7,7 @@ import { RootStackParamList } from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils';
+import { useFocusEffect } from '@react-navigation/native';
 
 type ListDetailsProps = NativeStackScreenProps<RootStackParamList, 'ListDetails'>;
 
@@ -40,13 +41,17 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
         loadListItems();
     }, [list?.id]);
 
-    useEffect(() => {
-        const getWallpaper = async () => {
+    useFocusEffect(
+        React.useCallback(() => {
+            const getWallpaper = async () => {
             const id = await loadWallpaperId();
             setSelectedWallpaperId(id);
-        };
-        getWallpaper();
-    }, []);
+            };
+            getWallpaper(); 
+
+            return () => {};
+        }, [])
+    );
 
     const saveUpdatedList = async (updatedList) => {
         try {
