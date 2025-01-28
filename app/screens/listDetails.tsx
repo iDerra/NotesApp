@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import BackgroundContext from '../context/BackgroundContext';
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils'; // Ajusta la ruta si es necesario
 
 type ListDetailsProps = NativeStackScreenProps<RootStackParamList, 'ListDetails'>;
 
@@ -15,7 +15,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
     const [newItem, setNewItem] = useState('');
     const [items, setItems] = useState<string[]>(list?.items || []);
     const [completedItems, setCompletedItems] = useState<boolean[]>(new Array(items.length).fill(false));
-    const { backgroundImage } = useContext(BackgroundContext);
+    const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
 
     const vibrantColors = ['#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF'];
     const pastelColors = ['#ffebf4', '#ffedcc', '#ffffe0', '#d0f0c0', '#e0f7fa', '#e8d0ff'];
@@ -39,6 +39,14 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
         };
         loadListItems();
     }, [list?.id]);
+
+    useEffect(() => {
+        const getWallpaper = async () => {
+            const id = await loadWallpaperId();
+            setSelectedWallpaperId(id);
+        };
+        getWallpaper();
+    }, []);
 
     const saveUpdatedList = async (updatedList) => {
         try {
@@ -114,7 +122,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
     if (!list) {
         return (
             <ImageBackground
-                source={backgroundImage || require('../../assets/images/background2.webp')} 
+                source={selectedWallpaperId ? backgrounds[selectedWallpaperId] : require('../../assets/images/background2.webp')}
                 style={stylesGeneral.backgroundImage}
                 resizeMode="stretch"
             >
@@ -127,7 +135,7 @@ const ListDetails: React.FC<ListDetailsProps> = ({ route }) => {
 
     return (
         <ImageBackground
-            source={backgroundImage || require('../../assets/images/background2.webp')} 
+            source={selectedWallpaperId ? backgrounds[selectedWallpaperId] : require('../../assets/images/background2.webp')}
             style={stylesGeneral.backgroundImage}
             resizeMode="stretch"
         >

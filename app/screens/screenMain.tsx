@@ -7,9 +7,11 @@ import stylesMain from './../styles/main_styles';
 import stylesGeneral from '../styles/general_styles';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import BackgroundContext from '../context/BackgroundContext';
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils'; // Ajusta la ruta si es necesario
+import { useFocusEffect } from '@react-navigation/native'; 
 
-const ScreenMain = () => {
+
+const ScreenMain = ({ navigation }) => {
   const [notes, setNotes] = useState([]);
   const [noteTitle, setNoteTitle] = useState('');
   const [noteText, setNoteText] = useState('');
@@ -18,8 +20,8 @@ const ScreenMain = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const { theme } = useTheme();
-  const { backgroundImage } = useContext(BackgroundContext);
   const [editingNote, setEditingNote] = useState(null);
+  const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
 
 
   const vibrantColors = [ '#FF45A1', '#FF9F4D', '#FFEB3B', '#00D68F', '#00A9E6', '#7C4DFF' ];
@@ -42,6 +44,18 @@ const ScreenMain = () => {
   
     loadNotes();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const getWallpaper = async () => {
+        const id = await loadWallpaperId();
+        setSelectedWallpaperId(id);
+      };
+      getWallpaper(); 
+  
+      return () => {};
+    }, [])
+  );
 
   const saveNotes = async (newNotes) => {
     try {
@@ -156,7 +170,7 @@ const ScreenMain = () => {
 
   return (
     <ImageBackground
-      source={backgroundImage || require('../../assets/images/background2.webp')} 
+      source={selectedWallpaperId ? backgrounds[selectedWallpaperId] : require('../../assets/images/background2.webp')}
       style={stylesGeneral.backgroundImage}
       resizeMode="stretch"
     >

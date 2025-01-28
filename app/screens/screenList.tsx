@@ -9,7 +9,8 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../App';
 import { useFocusEffect } from '@react-navigation/native';
-import BackgroundContext from '../context/BackgroundContext';
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils'; // Ajusta la ruta si es necesario
+
 
 type ScreenListProps = NativeStackScreenProps<RootStackParamList, 'list'>;
 
@@ -20,7 +21,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const { theme } = useTheme();
-  const { backgroundImage } = useContext(BackgroundContext);
+  const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
 
   
 
@@ -39,6 +40,14 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
       }
     };
     loadLists();
+  }, []);
+
+  useEffect(() => {
+    const getWallpaper = async () => {
+      const id = await loadWallpaperId();
+      setSelectedWallpaperId(id);
+    };
+    getWallpaper();
   }, []);
 
   const saveLists = async (newLists) => {
@@ -117,7 +126,7 @@ const ScreenList: React.FC<ScreenListProps> = ({ navigation }) => {
 
   return (
     <ImageBackground
-      source={backgroundImage || require('../../assets/images/background2.webp')} 
+      source={selectedWallpaperId ? backgrounds[selectedWallpaperId] : require('../../assets/images/background2.webp')}
       style={stylesGeneral.backgroundImage}
       resizeMode="stretch"
     >

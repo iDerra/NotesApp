@@ -1,41 +1,52 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Image, ImageBackground } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
 import stylesGeneral from '../styles/general_styles';
 import sytlesTheme from '../styles/theme_styles';
 import { Switch } from 'react-native-switch';
-import BackgroundContext from '../context/BackgroundContext';
+
+import { loadWallpaperId, backgrounds } from '../utils/wallpaperUtils';
+import useTheme from '../hooks/useThemes'; // Importa el hook personalizado
 
 const ThemeSettings = () => {
-    const { theme, toggleTheme } = useTheme();
-    const { backgroundImage, changeBackground } = useContext(BackgroundContext);
+    const { theme, toggleTheme } = useTheme(); // Usa el hook personalizado
+    const [selectedWallpaperId, setSelectedWallpaperId] = useState(null);
 
+    useEffect(() => {
+        const getWallpaper = async () => {
+            const id = await loadWallpaperId();
+            setSelectedWallpaperId(id);
+        };
+        getWallpaper();
+    }, []);
 
-    const backgrounds = [
-        { id: 1, src: require('../../assets/images/background1.jpeg') },
-        { id: 2, src: require('../../assets/images/background2.webp') },
-        { id: 3, src: require('../../assets/images/background3.webp') }
-    ];
+    const handleBackgroundChange = async (newBackgroundId) => {
+        setSelectedWallpaperId(newBackgroundId);
+        try {
+            await AsyncStorage.setItem('wallpaperId', newBackgroundId);
+        } catch (error) {
+            console.error('Error al guardar el ID del fondo de pantalla:', error);
+        }
+    };
 
     return (
         <ImageBackground
-            source={backgroundImage || require('../../assets/images/background2.webp')} 
+            source={selectedWallpaperId ? backgrounds[selectedWallpaperId] : require('../../assets/images/background2.webp')}
             style={stylesGeneral.backgroundImage}
             resizeMode="stretch"
         >
             <View style={[
                 sytlesTheme.containerThemes,
-                { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
+                { backgroundColor: theme === 'dark'? '#333333': '#f5f5f5' }
             ]}>
                 <View style={[
-                    { backgroundColor: backgroundImage ? 'rgba(0,0,0,0)' : (theme === 'dark' ? '#333333' : '#f5f5f5') }
+                    { backgroundColor: theme === 'dark'? '#333333': '#f5f5f5' } 
                 ]}>
-                    <Text style={[sytlesTheme.title, { color: theme === 'dark' ? '#ffffff' : '#000000' }]}>
-                        Current Theme: {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
+                    <Text style={[sytlesTheme.title, { color: theme === 'dark'? '#ffffff': '#000000' }]}>
+                        Current Theme: {theme === 'dark'? 'Dark Mode': 'Light Mode'}
                     </Text>
                     <View style={sytlesTheme.switchContainer}>
-                        <Text style={[sytlesTheme.switchLabel, { color: theme === 'dark' ? '#ffffff' : '#000000' }]}>
-                            Switch to {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                        <Text style={[sytlesTheme.switchLabel, { color: theme === 'dark'? '#ffffff': '#000000' }]}>
+                            Switch to {theme === 'dark'? 'Light Mode': 'Dark Mode'}
                         </Text>
                         <Switch
                             value={theme === 'dark'}
@@ -58,24 +69,24 @@ const ThemeSettings = () => {
                 { backgroundColor: theme === 'dark' ? '#333333' : '#f5f5f5' }
             ]}>
                 <Text style={[sytlesTheme.switchLabel, { color: theme === 'dark' ? '#ffffff' : '#000000' }]}>
-                    Select a Background:
+                Select a Background:
                 </Text>
                 <View style={sytlesTheme.backgroundContainer}>
-                    {backgrounds.map((background) => (
-                        <TouchableOpacity
-                            key={background.id}
-                            onPress={() => changeBackground(background.src)}
-                            style={[
-                                sytlesTheme.backgroundThumbnail,
-                                { borderColor: theme === 'dark' ? '#ffffff' : '#000000' }
-                            ]}
-                        >
-                            <Image
-                                source={background.src}
-                                style={sytlesTheme.thumbnailImage}
-                            />
-                        </TouchableOpacity>
-                    ))}
+                {Object.keys(backgrounds).map((wallpaperId) => (
+                    <TouchableOpacity
+                    key={wallpaperId}
+                    onPress={() => handleBackgroundChange(wallpaperId)}
+                    style={[
+                        sytlesTheme.backgroundThumbnail,
+                        { borderColor: theme === 'dark' ? '#ffffff' : '#000000' }
+                    ]}
+                    >
+                    <Image
+                        source={backgrounds[wallpaperId]}
+                        style={sytlesTheme.thumbnailImage}
+                    />
+                    </TouchableOpacity>
+                ))}
                 </View>
             </View>
         </ImageBackground>
