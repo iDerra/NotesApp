@@ -51,6 +51,6 @@ You can run the application in two ways:
 
 Notes App is ideal for anyone looking for a local notes app with advanced customisation and organisation features, and that does not require an internet connection.
 
-## Licence
+## License
 
 This project is under the MIT licence.
