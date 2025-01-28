@@ -2,23 +2,27 @@
   "expo": {
     "name": "Notes",
     "slug": "notesApp",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/notes-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.iderra.notesapp"
     },
     "android": {
       "package": "com.iderra.notesapp",
       "versionCode": 1,
-      "permissions": ["WRITE_EXTERNAL_STORAGE"],
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "label": "Notes",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/notes-icon.png",
         "backgroundColor": "#ffffff"
-      },
+      }
     },
     "web": {
       "bundler": "metro",
@@ -33,7 +37,8 @@
           "image": "./assets/images/notes-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#fb79a7"
+          "backgroundColor": "#000000",
+          "color": "white"
         }
       ]
     ],

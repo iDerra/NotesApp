@@ -1,50 +1,54 @@
-# Welcome to your Expo app 👋
+# Notes App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Description
 
-## Get started
+Notes App is a mobile application developed with React Native and Expo that allows you to create and manage notes in a personalised and organised way. 
 
-1. Install dependencies
+With Notes App you can create notes with title, description, date, colours and other customisable aspects. You can also organise your notes in lists with infinite elements. No internet connection required.
 
-   ```bash
-   npm install
-   ```
+## Main features
 
-2. Start the app
+* **Create personalised notes:**  Define the title, description, date, colours and other details of your notes.
+* **Offline operation:** Access your notes and lists anytime, anywhere, even without an internet connection.
+* **Lists for better organisation:** Create lists with infinite items to organise your tasks.
+* **Customize the wallpaper:** Give your app a personal touch by changing the wallpaper from the options included.
 
-   ```bash
+## Screenshots / GIFs
+
+![Main page](screenshots/MainPage.jpeg)
+![List notes page](screenshots/ListNotesPage.jpeg)
+![List details page](screenshots/DetailsPage.jpeg)
+![Add note](screenshots/AddNote.jpeg)
+
+## Installation
+
+Notes App is developed with React Native and Expo. To install and run it, follow these steps:
+
+1.  **Make sure you have Node.js installed on your system.**
+2.  **Clone this repository.**
+3.  **Install the dependencies:**
+    ```bash
+    npm install
+    ```
+4.  **Start the application:**
+    ```bash
     npx expo start
-   ```
+    ```
 
-In the output, you'll find options to open the app in a
+## Running the application
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+You can run the application in two ways:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+*   **Using Expo:** Follow the instructions that appear in the terminal after executing `npx expo start`. You will be able to run the app on an emulator or on your mobile device using the Expo Go app.
+*   **Compiling the application:** You can compile the application to get an APK file and install it on your Android device. Or you can download the latest version of the APK here: https://drive.google.com/file/d/1uTr0dHp3kGTeX-dJGTP7-EmUDayjYCjC/view?usp=drivesdk
 
-## Get a fresh project
+> **Disclaimer:** Additional software and other programs may be required to install and run the App correctly, e.g. Android Studio, EAS, etc. Please review the Expo documentation to run and compile the App correctly.
 
-When you're ready, run:
 
-```bash
-npm run reset-project
-```
+## Who the Notes App is for
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Notes App is ideal for anyone looking for a local notes app with advanced customisation and organisation features, and that does not require an internet connection.
 
-## Learn more
+## Licence
 
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is under the MIT licence.
