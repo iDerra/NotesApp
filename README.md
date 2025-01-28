@@ -15,10 +15,10 @@ With Notes App you can create notes with title, description, date, colours and o
 
 ## Screenshots / GIFs
 
-![Main page](screenshots/MainPage.jpeg)
-![List notes page](screenshots/ListNotesPage.jpeg)
-![List details page](screenshots/DetailsPage.jpeg)
-![Add note](screenshots/AddNote.jpeg)
+<img src="screenshots/MainPage.jpeg" height="300">
+<img src="screenshots/ListNotesPage.jpeg" height="300">
+<img src="screenshots/DetailsPage.jpeg" height="300"> 
+<img src="screenshots/AddNote.jpeg" height="300">
 
 ## Installation
 
